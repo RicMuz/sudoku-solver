@@ -79,7 +79,7 @@ square(X, Y, Matrix, Square):-Square_X_index is X // 3,
                               append([First_3, Second_3,Third_3],Square).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                    REPLACING ELEMENT AT GIVEN COORDINATES
+%                                           REPLACING ELEMENT AT GIVEN COORDINATES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %replace_nth_element(+N, +Value, +List, -New_list):-New_list is copy of List with changed element on position N to Value
@@ -92,3 +92,26 @@ replace_nth_element(N, Value, [X|Xs], [X|New_list]):-N_new is N - 1,
 replace_element_in_matrix(X,0,Value,[Row|Rest_rows],[New_row|Rest_rows]):-replace_nth_element(X,Value,Row,New_row),!.
 replace_element_in_matrix(X,Y,Value,[Row|Rest_rows],[Row|New_rest_rows]):-Y_new is Y - 1,
                                                                           replace_element_in_matrix(X,Y_new,Value,Rest_rows,New_rest_rows).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                       SOLVE SUDOKU
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%solve_sudoku(+Grid, -Solved):-Solved is solved Grid (not known are zeros)
+solve_sudoku(Grid,Grid):- \+find_first_appearence_in_matrix(0,Grid,_,_).
+solve_sudoku(Grid,Solved):-% find first empty spot:
+                           find_first_appearence_in_matrix(0,Grid,X,Y),
+                           % changing it will affect:
+                           nth_row(Y,Grid,Row),
+                           nth_column(X,Grid,Column),
+                           square(X,Y,Grid,Square),
+                           % possible values:
+                           between(1, 9, Value),
+                           % check if correct:
+                           \+member(Value,Row),
+                           \+member(Value,Column),
+                           \+member(Value,Square),
+                           % replace:
+                           replace_element_in_matrix(X,Y,Value,Grid,New_grid),
+                           % try to solve with inserted value:
+                           solve_sudoku(New_grid,Solved).                    
