@@ -44,3 +44,36 @@ find_line(Value, [Row|_], Y, X_acumulator, Y):-member(Value, Row),
 find_line(Value, [Row|Rest_rows],Y,X_acumulator,Y_acumulator):- \+member(Value, Row),           
                                                                 Y_new is Y + 1,        
                                                                 find_line(Value, Rest_rows, Y_new, X_acumulator, Y_acumulator).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                    EXTRACTING LINE, ROW AND SQUARE BY COORDINATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%nth_row(+N, +Matrix, -Row):-Row is row number N in Matrix (indexed from zero)
+nth_row(0, [X|_], X):-!.
+nth_row(N, [_|Xs], Row):-N=\=0,
+                         N_new is N - 1,
+                         nth_row(N_new, Xs, Row).
+
+%nth_column(+N, +Matrix, -Column):-Column is column number N in Matrix (indexed from zero)
+nth_column(N, Matrix, Column):-transpose(Matrix, Transposed),
+                               nth_row(N,Transposed,Column).
+
+%nth_trinity(+N, +List, -Sub_list):-Sub_list is trinity number N in the list
+nth_trinity(0, [X,Y,Z|_], [X,Y,Z]):-!.
+nth_trinity(N,[_,_,_|Xs],Acumulator):-N_new is N - 1,
+                                     nth_trinity(N_new,Xs,Acumulator).
+
+%square(+X, +Y, +Matrix, -Square):-Square is submatrix 3x3 represented as list containing coordinates X, Y in Matrix
+%                                 -squares are non-overlapping starting in left upper corner
+square(X, Y, Matrix, Square):-Square_X_index is X // 3,     
+                              Square_Y_index is Y // 3,
+                              % extracting lines:
+                              nth_trinity(Square_Y_index, Matrix, Rows),
+                              Rows = [Row1, Row2, Row3],
+                              % extracting elements:
+                              nth_trinity(Square_X_index, Row1, First_3),
+                              nth_trinity(Square_X_index, Row2, Second_3),
+                              nth_trinity(Square_X_index, Row3, Third_3),
+                              % connecting together:
+                              append([First_3, Second_3,Third_3],Square).
