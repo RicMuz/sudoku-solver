@@ -70,4 +70,21 @@ test(square_out_of_range,[fail]):-square(9,9,[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0
 
 :-end_tests(columns_rows_squares).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                    REPLACING ELEMENT AT GIVEN COORDINATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:-begin_tests(replace_in_matrix).
+
+test(replace_left_upper_corner):-replace_element_in_matrix(0, 0, 0,[[1,2,3],[4,5,6],[7,8,9]],[[0,2,3],[4,5,6],[7,8,9]]).
+
+test(replace_right_lower_corner):-replace_element_in_matrix(2, 2, 0,[[1,2,3],[4,5,6],[7,8,9]],[[1,2,3],[4,5,6],[7,8,0]]).
+
+test(replace_random):-replace_element_in_matrix(2, 1, 0,[[1,2,3],[4,5,6],[7,8,9]],[[1,2,3],[4,5,0],[7,8,9]]).
+
+test(replace_out_of_range,[fail]):-replace_element_in_matrix(9, 9, 0,[[1,2,3],[4,5,6],[7,8,9]],_).
+
+:-end_tests(replace_in_matrix).
+
+
 
