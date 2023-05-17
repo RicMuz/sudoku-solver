@@ -77,3 +77,18 @@ square(X, Y, Matrix, Square):-Square_X_index is X // 3,
                               nth_trinity(Square_X_index, Row3, Third_3),
                               % connecting together:
                               append([First_3, Second_3,Third_3],Square).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                    REPLACING ELEMENT AT GIVEN COORDINATES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%replace_nth_element(+N, +Value, +List, -New_list):-New_list is copy of List with changed element on position N to Value
+replace_nth_element(0, Value, [_|Xs], [Value|Xs]):-!.
+replace_nth_element(N, Value, [X|Xs], [X|New_list]):-N_new is N - 1,
+                                                    replace_nth_element(N_new,Value,Xs,New_list).
+
+
+%replace_in_matrix(+X, +Y, +Value, +Matrix, -New_matrix):-New_matrix is copy of Matrix with changed element on X,Y to Value
+replace_element_in_matrix(X,0,Value,[Row|Rest_rows],[New_row|Rest_rows]):-replace_nth_element(X,Value,Row,New_row),!.
+replace_element_in_matrix(X,Y,Value,[Row|Rest_rows],[Row|New_rest_rows]):-Y_new is Y - 1,
+                                                                          replace_element_in_matrix(X,Y_new,Value,Rest_rows,New_rest_rows).
